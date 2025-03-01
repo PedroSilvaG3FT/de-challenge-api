@@ -3,18 +3,17 @@ import { ICreateUser } from "@/shared/schemas/user.schema";
 import { ResponseUtil } from "@/shared/utils/response.util";
 import { TokenService } from "@/core/services/token.service";
 import { SignInWithPasswordCredentials } from "@supabase/supabase-js";
-import SupabaseAuthService from "@/shared/supabase/services/supabase-auth.service";
+import { supabaseAuthService } from "@/shared/supabase/services/supabase-auth.service";
 
 export class AuthService {
   #userService = new UserService();
-  #supabaseAuthService = SupabaseAuthService.getInstance();
 
   public signUp = async (data: ICreateUser) => {
     return this.#userService.create(data);
   };
 
   public signIn = async (data: SignInWithPasswordCredentials) => {
-    const response = await this.#supabaseAuthService.signIn(data);
+    const response = await supabaseAuthService.signIn(data);
 
     if (!response.data.user) {
       const message = response.error?.message || "User not found";

@@ -3,11 +3,9 @@ import {
   SignInWithPasswordCredentials,
   SignUpWithPasswordCredentials,
 } from "@supabase/supabase-js";
-import SupabaseSetup from "../supabase-setup";
+import { supabaseSetup } from "../supabase-setup";
 
-export default class SupabaseAuthService {
-  #setup = SupabaseSetup.getInstance();
-
+class SupabaseAuthService {
   static #instance: SupabaseAuthService;
   public _client!: SupabaseClient;
 
@@ -15,7 +13,7 @@ export default class SupabaseAuthService {
   public refreshToken: string = "";
 
   private constructor() {
-    this._client = this.#setup._client;
+    this._client = supabaseSetup._client;
   }
 
   public static getInstance(): SupabaseAuthService {
@@ -25,33 +23,32 @@ export default class SupabaseAuthService {
   }
 
   public signUp(data: SignUpWithPasswordCredentials) {
-    return this.#setup._client.auth.signUp(data);
+    return supabaseSetup._client.auth.signUp(data);
   }
 
   public signIn(data: SignInWithPasswordCredentials) {
-    return this.#setup._client.auth.signInWithPassword(data);
+    return supabaseSetup._client.auth.signInWithPassword(data);
   }
 
   public signOut() {
-    return this.#setup._client.auth.signOut();
+    return supabaseSetup._client.auth.signOut();
   }
 
   public delete(id: string) {
-    return this.#setup._client.auth.admin.deleteUser(id);
+    return supabaseSetup._client.auth.admin.deleteUser(id);
   }
 
   public async updateUser(data: {
     displayName?: string;
     phoneNumber?: string;
   }) {
-    const { data: userData, error } = await this.#setup._client.auth.updateUser(
-      {
+    const { data: userData, error } =
+      await supabaseSetup._client.auth.updateUser({
         data: {
           phone: data.phoneNumber,
           display_name: data.displayName,
         },
-      }
-    );
+      });
 
     if (error) throw error;
     return userData;
@@ -67,3 +64,5 @@ export default class SupabaseAuthService {
       .catch(() => {});
   }
 }
+
+export const supabaseAuthService = SupabaseAuthService.getInstance();

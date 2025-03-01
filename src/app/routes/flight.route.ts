@@ -1,8 +1,7 @@
 import { AppRouteConfig } from "./@types/route.type";
 import { FastifyInstance, FastifySchema } from "fastify";
-import { FlightController } from "../controllers/flight.controller";
 import { FlightRouteSchemas } from "./schemas/flight.schema";
-import { z } from "zod";
+import { FlightController } from "../controllers/flight.controller";
 
 const moduleName = "flight";
 const schema: FastifySchema = {
@@ -20,11 +19,23 @@ const route: AppRouteConfig = {
       {
         schema: {
           ...schema,
-          body: FlightRouteSchemas.flightSearchParamsSchema,
+          body: FlightRouteSchemas.flightSearchReqSchema,
           response: { 200: FlightRouteSchemas.flightSearchResSchema },
         },
       },
       _controller.search
+    );
+
+    fastify.get(
+      "/airport",
+      {
+        schema: {
+          ...schema,
+          querystring: FlightRouteSchemas.searchAirportReq,
+          response: { 200: FlightRouteSchemas.searchAirportRes },
+        },
+      },
+      _controller.searchAirport
     );
   },
 };

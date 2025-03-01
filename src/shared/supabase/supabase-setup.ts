@@ -1,7 +1,7 @@
 import { enviroments } from "@/core/enviroments";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-export default class SupabaseSetup {
+class SupabaseSetup {
   #client: SupabaseClient;
   static #instance: SupabaseSetup;
 
@@ -21,3 +21,5 @@ export default class SupabaseSetup {
     return this.#client;
   }
 }
+
+export const supabaseSetup = SupabaseSetup.getInstance();

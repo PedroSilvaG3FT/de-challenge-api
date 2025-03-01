@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createResponseSchema, createFlexibleSchema } from "./_base.schema";
 
-const flightSearchParamsSchema = z.object({
+const flightSearchReqSchema = z.object({
   nonStop: z.boolean().optional(),
   adults: z.number().int().positive(),
   originLocationCode: z.string().length(3),
@@ -147,7 +147,41 @@ const flightSearchResSchema = createResponseSchema(
   z.array(flightOfferSchema)
 ).passthrough();
 
+const searchAirportReq = z.object({
+  keyword: z.string().min(3, "Keyword is required"),
+});
+
+const searchAirportRes = createFlexibleSchema(
+  z.object({
+    id: z.string(),
+    type: z.string(),
+    name: z.string(),
+    subType: z.string(),
+    iataCode: z.string(),
+    detailedName: z.string(),
+    timeZoneOffset: z.string(),
+    self: z.object({
+      href: z.string().url(),
+      methods: z.array(z.string()),
+    }),
+    geoCode: z.object({
+      latitude: z.number(),
+      longitude: z.number(),
+    }),
+    address: z.object({
+      cityName: z.string(),
+      cityCode: z.string(),
+      countryName: z.string(),
+      countryCode: z.string(),
+      regionCode: z.string().optional(),
+    }),
+  })
+);
+
 export const FlightRouteSchemas = {
-  flightSearchParamsSchema,
+  flightSearchReqSchema,
   flightSearchResSchema,
+
+  searchAirportReq,
+  searchAirportRes,
 };

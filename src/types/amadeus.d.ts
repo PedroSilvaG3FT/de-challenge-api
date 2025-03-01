@@ -1,4 +1,30 @@
 declare module "amadeus" {
+  export interface IAmadeusMeta {
+    count: number;
+    links: { self: string };
+  }
+
+  export interface IAmadeusDictionaries {
+    aircraft: Record<string, string>;
+    carriers: Record<string, string>;
+    currencies: Record<string, string>;
+    locations: Record<string, IAmadeusDictionaryLocation>;
+  }
+
+  export interface IAmadeusBaseResponse<Data> {
+    data: Data;
+    parsed: boolean;
+    headers: object;
+    request: object;
+    analytics: object;
+    statusCode: number;
+    result: {
+      data: Data;
+      meta: IAmadeusMeta;
+      dictionaries: IAmadeusDictionaries;
+    };
+  }
+
   export interface IAmadeusFlightOffersSearchParams {
     adults: number;
     departureDate: string;
@@ -21,18 +47,8 @@ declare module "amadeus" {
     dictionaries: IAmadeusDictionaries;
   }
 
-  export interface IAmadeusFlightOfferResponse {
-    body: string;
-    parsed: boolean;
-    statusCode: number;
-    data: IAmadeusFlightOffer[];
-    result: IAmadeusFlightOfferSearch;
-  }
-
-  export interface IAmadeusMeta {
-    count: number;
-    links: { self: string };
-  }
+  export interface IAmadeusFlightOfferResponse
+    extends IAmadeusBaseResponse<IAmadeusFlightOffer[]> {}
 
   export interface IAmadeusFlightOffer {
     id: string;
@@ -113,17 +129,37 @@ declare module "amadeus" {
     weightUnit: string;
   }
 
-  export interface IAmadeusDictionaries {
-    aircraft: Record<string, string>;
-    carriers: Record<string, string>;
-    currencies: Record<string, string>;
-    locations: Record<string, IAmadeusDictionaryLocation>;
-  }
-
   export interface IAmadeusDictionaryLocation {
     cityCode: string;
     countryCode: string;
   }
+
+  export interface IAmadeusSearchLocationParams {
+    keyword: string;
+    subType: string;
+  }
+
+  export interface IAmadeusLocationData {
+    id: string;
+    type: string;
+    name: string;
+    subType: string;
+    iataCode: string;
+    detailedName: string;
+    timeZoneOffset: string;
+    self: { href: string; methods: string[] };
+    geoCode: { latitude: number; longitude: number };
+    address: {
+      cityName: string;
+      cityCode: string;
+      countryName: string;
+      countryCode: string;
+      regionCode?: string;
+    };
+  }
+
+  export interface IAmadeusLocationResponse
+    extends IAmadeusBaseResponse<IAmadeusLocationData[]> {}
 
   class Amadeus {
     constructor(params: { clientId: string; clientSecret: string });
@@ -133,6 +169,14 @@ declare module "amadeus" {
         get: (
           params: IAmadeusFlightOffersSearchParams
         ) => Promise<IAmadeusFlightOfferResponse>;
+      };
+    };
+
+    referenceData: {
+      locations: {
+        get: (
+          params: IAmadeusSearchLocationParams
+        ) => Promise<IAmadeusLocationResponse>;
       };
     };
   }

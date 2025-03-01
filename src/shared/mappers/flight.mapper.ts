@@ -1,6 +1,10 @@
-import { IAmadeusFlightOffer, IAmadeusFlightOfferSearch } from "amadeus";
+import {
+  IAmadeusFlightOffer,
+  IAmadeusFlightOfferSearch,
+  IAmadeusLocationResponse,
+} from "amadeus";
 
-export class FlightHelper {
+export class FlighMapper {
   public static buildFlights(
     response: IAmadeusFlightOfferSearch
   ): IAmadeusFlightOffer[] {

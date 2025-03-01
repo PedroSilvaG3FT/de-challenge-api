@@ -8,11 +8,24 @@ export class FlightController {
 
   public search = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const payload = FlightRouteSchemas.flightSearchParamsSchema.parse(
+      const payload = FlightRouteSchemas.flightSearchReqSchema.parse(
         request.body
       );
 
       const response = await this.#flightService.search(payload);
+      ResponseUtil.handler(reply, response);
+    } catch (error) {
+      ResponseUtil.handleError(error, reply);
+    }
+  };
+
+  public searchAirport = async (
+    request: FastifyRequest,
+    reply: FastifyReply
+  ) => {
+    try {
+      const payload = FlightRouteSchemas.searchAirportReq.parse(request.query);
+      const response = await this.#flightService.searchAirport(payload.keyword);
       ResponseUtil.handler(reply, response);
     } catch (error) {
       ResponseUtil.handleError(error, reply);

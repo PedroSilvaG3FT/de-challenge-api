@@ -1,11 +1,10 @@
 import { randomUUID } from "crypto";
 import { ICreateUser } from "@/shared/schemas/user.schema";
 import { ProfileRepository } from "../repositories/profile.repository";
-import SupabaseAuthService from "@/shared/supabase/services/supabase-auth.service";
+import { supabaseAuthService } from "@/shared/supabase/services/supabase-auth.service";
 
 export class UserService {
   #profileRepository = new ProfileRepository();
-  #supabaseAuthService = SupabaseAuthService.getInstance();
 
   public getAll = () => {
     return this.#profileRepository.getAll();
@@ -27,7 +26,7 @@ export class UserService {
     const user = await this.getByEmail(data.email);
     if (user) throw new Error(`User exists`);
 
-    const signUpResponse = await this.#supabaseAuthService.signUp({
+    const signUpResponse = await supabaseAuthService.signUp({
       email: data.email,
       phone: data.phone,
       password: data.password,
@@ -54,6 +53,6 @@ export class UserService {
     if (!user) throw new Error(`User does not exist`);
 
     await this.#profileRepository.delete(id);
-    await this.#supabaseAuthService.delete(user.userId);
+    await supabaseAuthService.delete(user.userId);
   };
 }
