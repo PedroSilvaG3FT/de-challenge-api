@@ -27,12 +27,21 @@ export class TokenService {
     reply: FastifyReply
   ) => {
     try {
+      const token =
+        request.headers["authorization"] || request.headers["Authorization"];
+
+      if (!token) {
+        const response = ResponseUtil.unauthorized(["Token not provided"]);
+        ResponseUtil.handler(reply, response);
+        return null;
+      }
+
       await request.jwtVerify();
       const data = request.user as ITokenDecodeResult;
       return data.payload || {};
     } catch (error) {
-      const badRequest = ResponseUtil.badRequest(["Invalid token"]);
-      ResponseUtil.handler(reply, badRequest);
+      const response = ResponseUtil.unauthorized(["Invalid token"]);
+      ResponseUtil.handler(reply, response);
       return null;
     }
   };

@@ -1,17 +1,23 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { TokenService } from "../services/token.service";
+import { ResponseUtil } from "@/shared/utils/response.util";
+
+const PUBLIC_ROUTES = ["/swagger", "/auth", "/api/health"];
 
 export default async function RouteGuardHook(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
   try {
-    const publicRoutes = ["/swagger", "/auth", "/", "api/health"];
-    const isPublic = publicRoutes.some((item) => request.url.includes(item));
+    const isPublic = PUBLIC_ROUTES.some((route) => request.url.includes(route));
+    if (request.url === "/" || isPublic) return;
 
-    if (isPublic) return;
-
-    await request.jwtVerify();
+    const session = await TokenService.verifyAndDecode(request, reply);
+    if (session) request.user = session;
   } catch (err) {
-    reply.send(err);
+    ResponseUtil.handler(
+      reply,
+      ResponseUtil.unauthorized(["Unauthorized access"])
+    );
   }
 }
