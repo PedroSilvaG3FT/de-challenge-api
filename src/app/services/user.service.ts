@@ -28,20 +28,20 @@ export class UserService {
 
     const signUpResponse = await supabaseAuthService.signUp({
       email: data.email,
-      phone: data.phone,
+      phone: data.phone || "",
       password: data.password,
     });
 
-    const userId = signUpResponse.data?.user?.id || "";
+    if (!signUpResponse.data?.user?.id) throw new Error(`User not created`);
 
     const profile = await this.#profileRepository.create({
       id: randomUUID(),
 
-      userId,
       active: true,
       name: data.name,
       email: data.email,
-      birthDate: new Date(),
+      birthDate: new Date(data.birthDate),
+      userId: signUpResponse.data.user.id,
     });
 
     return profile;

@@ -24,7 +24,8 @@ export class TokenService {
 
   public static verifyAndDecode = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
+    isPreventResponseError: boolean = false
   ) => {
     try {
       const token =
@@ -32,7 +33,7 @@ export class TokenService {
 
       if (!token) {
         const response = ResponseUtil.unauthorized(["Token not provided"]);
-        ResponseUtil.handler(reply, response);
+        if (!isPreventResponseError) ResponseUtil.handler(reply, response);
         return null;
       }
 

@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { FlightService } from "../services/flight.service";
 import { ResponseUtil } from "@/shared/utils/response.util";
+import { TokenService } from "@/core/services/token.service";
 import { FlightRouteSchemas } from "../routes/schemas/flight.schema";
 
 export class FlightController {
@@ -12,7 +13,12 @@ export class FlightController {
         request.body
       );
 
-      const response = await this.#flightService.search(payload);
+      const user = await TokenService.verifyAndDecode(request, reply, true);
+      const response = await this.#flightService.search(
+        payload,
+        user?.user_profile_id
+      );
+
       ResponseUtil.handler(reply, response);
     } catch (error) {
       ResponseUtil.handleError(reply, error);

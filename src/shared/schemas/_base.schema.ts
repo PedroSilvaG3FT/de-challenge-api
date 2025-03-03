@@ -1,8 +1,15 @@
 import { z } from "zod";
+
 export const EmailBaseFieldSchema = z
   .string()
   .email("Invalid email format")
   .min(1, "Email cannot be empty");
+
+export const NumberBaseFieldSchema = z
+  .number()
+  .min(0, "Value must be a non-negative number");
+
+export const StringBaseFieldSchema = z.string().min(1, "Field cannot be empty");
 
 export const DateBaseFieldSchema = z
   .union([

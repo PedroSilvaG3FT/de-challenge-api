@@ -10,10 +10,13 @@ import CacheService from "@/core/services/cache.service";
 import { ResponseUtil } from "@/shared/utils/response.util";
 import { FlighMapper } from "@/shared/mappers/flight.mapper";
 import { amadeusService } from "@/shared/amadeus/amadeus.service";
+import { FlightSearchHelper } from "@/shared/helpers/flight-search.helper";
+import { FlightSearchHistoryService } from "./flight-search-history.service";
 
 export class FlightService {
   private AIRPORT_CACHE_TTL = 24 * 60 * 60; // 24h
   private FLIGHT_SEARCH_CACHE_TTL = 2 * 60; // 2min
+  #flightSearchHistoryService = new FlightSearchHistoryService();
 
   public searchAirport = async (keyword: string) => {
     const formatedKeyword = StringUtil.removeAccents(
@@ -35,7 +38,10 @@ export class FlightService {
     return ResponseUtil.success(response.data);
   };
 
-  public search = async (searchParams: IAmadeusFlightOffersSearchParams) => {
+  public search = async (
+    searchParams: IAmadeusFlightOffersSearchParams,
+    userId?: string
+  ) => {
     const cacheKey = this.createSearchCacheKey(searchParams);
     const cachedResult = CacheService.get<IAmadeusFlightOffer[]>(cacheKey);
 
@@ -46,6 +52,13 @@ export class FlightService {
 
     if (response.statusCode === 200) {
       const flightData = FlighMapper.buildFlights(response.result);
+
+      if (userId)
+        await this.#flightSearchHistoryService.createFromFlightSearch(
+          userId,
+          searchParams,
+          flightData
+        );
 
       CacheService.set(cacheKey, flightData, this.FLIGHT_SEARCH_CACHE_TTL);
 

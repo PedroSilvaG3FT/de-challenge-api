@@ -5,7 +5,7 @@ export const CreateUserSchema = z.object({
   email: EmailBaseFieldSchema,
   birthDate: DateBaseFieldSchema,
   name: z.string().min(1, "Name cannot be empty"),
-  phone: z.string().min(1, "Phone number cannot be empty"),
+  phone: z.string().min(1, "Phone number cannot be empty").optional(),
   password: z.string().min(6, "Password must be at least 6 characters long"),
 });
 

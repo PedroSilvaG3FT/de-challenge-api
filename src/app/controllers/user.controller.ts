@@ -12,9 +12,9 @@ export class UserController {
 
     if (!token) ResponseUtil.handler(reply, badRequest);
     else {
-      const { user_id } = TokenService.decode(token);
+      const { user_profile_id } = TokenService.decode(token);
 
-      const data = await this.#userService.getById(user_id);
+      const data = await this.#userService.getById(user_profile_id);
       ResponseUtil.handler(reply, ResponseUtil.success(data));
     }
   };

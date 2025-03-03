@@ -15,4 +15,23 @@ model profile {
   userId    String   @unique
   birthDate DateTime
   active    Boolean
+
+  flight_search_history flightSearchHistory[]
+}
+
+model flightSearchHistory {
+  id              String    @id @default(uuid())
+  profileUserId   String
+  origin          String
+  destination     String
+  originDate      DateTime
+  destinationDate DateTime?
+  countPassengers Int
+  lowestPrice     Decimal   @db.Decimal(10, 2)
+  higherPrice     Decimal   @db.Decimal(10, 2)
+  createdAt       DateTime  @default(now())
+
+  profile profile @relation(fields: [profileUserId], references: [id])
+
+  @@index([profileUserId])
 }

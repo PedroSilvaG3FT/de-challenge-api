@@ -26,9 +26,9 @@ export class AuthService {
     return ResponseUtil.success({
       user: profile,
       token: TokenService.generate({
-        user_id: profile.id,
         user_name: profile.name,
         user_email: profile.email,
+        user_profile_id: profile.id,
         supabase_access_token: response.data.session?.access_token,
         supabase_refresh_token: response.data.session?.refresh_token,
       }),
