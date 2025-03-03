@@ -1,3 +1,4 @@
+import { UserRouteSchemas } from "./schemas/user.schema";
 import { AppRouteConfig } from "./@types/route.type";
 import { FastifyInstance, FastifySchema } from "fastify";
 import { UserController } from "../controllers/user.controller";
@@ -10,7 +11,11 @@ const route: AppRouteConfig = {
   routes: async (fastify: FastifyInstance) => {
     const _controller = new UserController();
 
-    fastify.get("/me", { schema: { ...schema } }, _controller.getByToken);
+    fastify.get(
+      "/me",
+      { schema: { ...schema, response: { 200: UserRouteSchemas.meRes } } },
+      _controller.getByToken
+    );
   },
 };
 

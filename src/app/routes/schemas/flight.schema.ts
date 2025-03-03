@@ -178,7 +178,33 @@ const searchAirportRes = createFlexibleSchema(
   })
 );
 
+const flightSearchHistorySchema = createFlexibleSchema(
+  z.object({
+    id: z.string().uuid(),
+    profileUserId: z.string().uuid(),
+    origin: z.string().length(3),
+    destination: z.string().length(3),
+    originDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    destinationDate: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/)
+      .nullable(),
+    countPassengers: z.number().int().positive(),
+    lowestPrice: z.string(),
+    higherPrice: z.string(),
+    createdAt: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+  })
+);
+
+const flightSearchHistoryResSchema = createResponseSchema(
+  z.array(flightSearchHistorySchema)
+).passthrough();
+
 export const FlightRouteSchemas = {
+  flightSearchHistoryResSchema,
+
   flightSearchReqSchema,
   flightSearchResSchema,
 

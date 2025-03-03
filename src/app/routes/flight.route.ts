@@ -41,7 +41,10 @@ const route: AppRouteConfig = {
     fastify.get(
       "/search/history",
       {
-        schema: { ...schema },
+        schema: {
+          ...schema,
+          response: { 200: FlightRouteSchemas.flightSearchHistoryResSchema },
+        },
       },
       _controller.history
     );
