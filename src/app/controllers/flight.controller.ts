@@ -15,7 +15,7 @@ export class FlightController {
       const response = await this.#flightService.search(payload);
       ResponseUtil.handler(reply, response);
     } catch (error) {
-      ResponseUtil.handleError(error, reply);
+      ResponseUtil.handleError(reply, error);
     }
   };
 
@@ -24,11 +24,11 @@ export class FlightController {
     reply: FastifyReply
   ) => {
     try {
-      const payload = FlightRouteSchemas.searchAirportReq.parse(request.query);
+      const payload = FlightRouteSchemas.searchAirportReq.parse(request.body);
       const response = await this.#flightService.searchAirport(payload.keyword);
       ResponseUtil.handler(reply, response);
     } catch (error) {
-      ResponseUtil.handleError(error, reply);
+      ResponseUtil.handleError(reply, error);
     }
   };
 }

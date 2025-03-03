@@ -6,12 +6,17 @@ import logger from "@/shared/utils/logger.util";
 import { ResponseUtil } from "@/shared/utils/response.util";
 import { FlighMapper } from "@/shared/mappers/flight.mapper";
 import { amadeusService } from "@/shared/amadeus/amadeus.service";
+import { StringUtil } from "@/shared/utils/string.util";
 
 export class FlightService {
   public searchAirport = async (keyword: string) => {
+    const formatedKeyword = StringUtil.removeAccents(
+      keyword.trim().toUpperCase()
+    );
+
     const response = await amadeusService._app.referenceData.locations.get({
-      keyword,
-      subType: "AIRPORT,CITY",
+      keyword: formatedKeyword,
+      subType: "AIRPORT",
     });
 
     return ResponseUtil.success(response.data);

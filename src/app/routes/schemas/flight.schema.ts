@@ -1,24 +1,24 @@
 import { z } from "zod";
 import { createResponseSchema, createFlexibleSchema } from "./_base.schema";
+import { ETravelClass } from "@/shared/enums/travel-class.enum";
 
 const flightSearchReqSchema = z.object({
-  nonStop: z.boolean().optional(),
   adults: z.number().int().positive(),
-  originLocationCode: z.string().length(3),
-  maxPrice: z.number().positive().optional(),
-  max: z.number().int().positive().optional(),
-  destinationLocationCode: z.string().length(3),
   infants: z.number().int().nonnegative().optional(),
   children: z.number().int().nonnegative().optional(),
+  originLocationCode: z.string().length(3),
+  destinationLocationCode: z.string().length(3),
+  travelClass: z.nativeEnum(ETravelClass).optional(),
   departureDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   returnDate: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/)
     .optional(),
+
+  nonStop: z.boolean().optional(),
+  maxPrice: z.number().positive().optional(),
+  max: z.number().int().positive().optional(),
   currencyCode: z.string().length(3).optional(),
-  travelClass: z
-    .enum(["ECONOMY", "PREMIUM_ECONOMY", "BUSINESS", "FIRST"])
-    .optional(),
 });
 
 const amadeusPrice = createFlexibleSchema(

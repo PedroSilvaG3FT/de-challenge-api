@@ -37,7 +37,7 @@ export class ResponseUtil {
     reply.status(response.status).send(response);
   }
 
-  public static handleError(error: unknown, reply: FastifyReply): void {
+  public static handleError(reply: FastifyReply, error: unknown): void {
     let response: IAppResponse<null>;
 
     if (error instanceof ZodError) {
@@ -48,7 +48,13 @@ export class ResponseUtil {
     } else if (error instanceof Error) {
       response = this.error(500, [error.message]);
     } else {
-      response = this.error(500, ["An unknown error occurred"]);
+      const errorData = error as any;
+      const status = errorData["response"]?.statusCode || 400;
+      const messages = errorData["description"]?.length
+        ? errorData["description"]?.map((item: any) => item.detail)
+        : ["An unknown error occurred"];
+
+      response = this.error(status, messages);
     }
 
     this.handler(reply, response);

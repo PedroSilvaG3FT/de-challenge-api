@@ -26,12 +26,12 @@ const route: AppRouteConfig = {
       _controller.search
     );
 
-    fastify.get(
+    fastify.post(
       "/airport",
       {
         schema: {
           ...schema,
-          querystring: FlightRouteSchemas.searchAirportReq,
+          body: FlightRouteSchemas.searchAirportReq,
           response: { 200: FlightRouteSchemas.searchAirportRes },
         },
       },

@@ -13,7 +13,7 @@ export class AuthController {
 
       ResponseUtil.handler(reply, ResponseUtil.success(data));
     } catch (error) {
-      ResponseUtil.handleError(error, reply);
+      ResponseUtil.handleError(reply, error);
     }
   };
 
@@ -24,7 +24,7 @@ export class AuthController {
 
       ResponseUtil.handler(reply, response);
     } catch (error) {
-      ResponseUtil.handleError(error, reply);
+      ResponseUtil.handleError(reply, error);
     }
   };
 }
