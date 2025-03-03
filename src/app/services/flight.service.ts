@@ -65,6 +65,10 @@ export class FlightService {
       params.departureDate,
       params.adults,
       params.travelClass || "ANY",
+      params.currencyCode || "ANY",
+      params.max || "ANY",
+      params.maxPrice || "ANY",
+      params.nonStop || "F",
     ];
 
     if (params.returnDate) keyParts.push(params.returnDate);
