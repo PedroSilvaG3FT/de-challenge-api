@@ -3,6 +3,7 @@ import { FlightSearchHelper } from "@/shared/helpers/flight-search.helper";
 import { IAmadeusFlightOffer, IAmadeusFlightOffersSearchParams } from "amadeus";
 import { IFlightSearchHistory } from "@/shared/schemas/flight-search-history.schema";
 import { FlightSearchHistoryRepository } from "../repositories/flight-search-history.repository";
+import { ResponseUtil } from "@/shared/utils/response.util";
 
 export class FlightSearchHistoryService {
   #flightSearchHistoryRepository = new FlightSearchHistoryRepository();
@@ -15,10 +16,12 @@ export class FlightSearchHistoryService {
     return this.#flightSearchHistoryRepository.getById(id);
   };
 
-  public getByProfileUserId = (profileUserId: string) => {
-    return this.#flightSearchHistoryRepository.getByProfileUserId(
+  public getByProfileUserId = async (profileUserId: string) => {
+    const data = await this.#flightSearchHistoryRepository.getByProfileUserId(
       profileUserId
     );
+
+    return ResponseUtil.success(data);
   };
 
   public create = async (data: IFlightSearchHistory) => {

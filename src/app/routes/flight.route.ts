@@ -37,6 +37,14 @@ const route: AppRouteConfig = {
       },
       _controller.searchAirport
     );
+
+    fastify.get(
+      "/search/history",
+      {
+        schema: { ...schema },
+      },
+      _controller.history
+    );
   },
 };
 

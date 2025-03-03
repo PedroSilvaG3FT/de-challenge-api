@@ -10,7 +10,6 @@ import CacheService from "@/core/services/cache.service";
 import { ResponseUtil } from "@/shared/utils/response.util";
 import { FlighMapper } from "@/shared/mappers/flight.mapper";
 import { amadeusService } from "@/shared/amadeus/amadeus.service";
-import { FlightSearchHelper } from "@/shared/helpers/flight-search.helper";
 import { FlightSearchHistoryService } from "./flight-search-history.service";
 
 export class FlightService {
@@ -54,7 +53,7 @@ export class FlightService {
       const flightData = FlighMapper.buildFlights(response.result);
 
       if (userId)
-        await this.#flightSearchHistoryService.createFromFlightSearch(
+        this.#flightSearchHistoryService.createFromFlightSearch(
           userId,
           searchParams,
           flightData
