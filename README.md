@@ -1,7 +1,4 @@
 # Backend Application Documentation
-
-![Logo](https://de-challenge-ui.vercel.app/logo.svg)
-
 ## Overview
 
 This is the backend application built with Node.js and the Fastify framework. The application is designed to provide an API for managing flight search queries and integrates with the Amadeus API to perform flight searches. Additionally, it uses Supabase for user management and PostgreSQL database interactions. The application automatically utilizes Pino for logging purposes.
